@@ -11,16 +11,16 @@
 ZeroMe = 500 MB
 |
 +-- data = 500 MB
-|-----------------------------------------------------------------------|
-| +-- users = 500 MB                                                    |
-|                                                                       |
-| +-- user1 = 50 KB                                                     |
-| +-- user2 = 50 KB                                                     |
-| +-- user3 = 50 KB                                                     |
-| +-- user4 = 50 KB                                                     |
-| +-- user5 = 50 KB                                                     |
-| +-- user...                                                           |
-| +-- user10000 = 50 KB | 50 KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB
+|-----------------------------------------------------------------------------------|
+| +-- users = 500 MB                                                                |
+|                                                                                   |
+| +-- user1 = 50 KB                                                                 |
+| +-- user2 = 50 KB                                                                 |
+| +-- user3 = 50 KB                                                                 |
+| +-- user4 = 50 KB                                                                 |
+| +-- user5 = 50 KB                                                                 |
+| +-- user...                                                                       |
+| +-- user10000 = 50 KB | 50 KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB
 +-- index.js = 250 KB
 +-- index.css = 100 KB
 +-- index.html = 50 KB
@@ -40,52 +40,52 @@ ZeroMe = 400 KB
 UserDB = 10 MB
 |
 +-- data = 10 MB
-|----------------------------------------------------------------------|
-| +-- userinfo = 10 MB                                                 |
-|                                                                      |
-| +-- user1 = 1 KB                                                     |
-| +-- user2 = 1 KB                                                     |
-| +-- user3 = 1 KB                                                     |
-| +-- user4 = 1 KB                                                     |
-| +-- user5 = 1 KB                                                     |
-| +-- user...                                                          |
-| +-- user10000 = 1 KB |= 1 KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB
+|----------------------------------------------------------------------------------|
+| +-- userinfo = 10 MB                                                             |
+|                                                                                  |
+| +-- user1 = 1 KB                                                                 |
+| +-- user2 = 1 KB                                                                 |
+| +-- user3 = 1 KB                                                                 |
+| +-- user4 = 1 KB                                                                 |
+| +-- user5 = 1 KB                                                                 |
+| +-- user...                                                                      |
+| +-- user10000 = 1 KB |= 1 KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB
 +-- index.html = 5 KB
 
 Hub1 = 167 MB
 |
 +-- data = 167 MB
-|---------------------------------------------------------------------|
-| +-- users = 167 MB                                                  |
-|                                                                     |
-| +-- user1 = 50KB                                                    |
-| +-- user2 = 50KB                                                    |
-| +-- user...                                                         |
-| +-- user3333 = 50KB |= 50KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB
+|---------------------------------------------------------------------------------|
+| +-- users = 167 MB                                                              |
+|                                                                                 |
+| +-- user1 = 50KB                                                                |
+| +-- user2 = 50KB                                                                |
+| +-- user...                                                                     |
+| +-- user3333 = 50KB |= 50KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB
 +-- index.html = 5 KB
 
 Hub2 = 167 MB
 |
 +-- data = 167 MB
-|---------------------------------------------------------------------|
-| +-- users = 167 MB                                                  |
-|                                                                     |
-| +-- user3334 = 50KB                                                 |
-| +-- user3335 = 50KB                                                 |
-| +-- user...                                                         |
-| +-- user6666 = 50KB |= 50KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB
+|---------------------------------------------------------------------------------|
+| +-- users = 167 MB                                                              |
+|                                                                                 |
+| +-- user3334 = 50KB                                                             |
+| +-- user3335 = 50KB                                                             |
+| +-- user...                                                                     |
+| +-- user6666 = 50KB |= 50KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB
 +-- index.html = 5 KB
 
 Hub3 = 167 MB
 |
 +-- data = 167 MB
-|----------------------------------------------------------------------|
-| +-- users = 167 MB                                                   |
-|                                                                      |
-| +-- user6667 = 50KB                                                  |
-| +-- user6668 = 50KB                                                  |
-| +-- user...                                                          |
-| +-- user10000 = 50KB |= 50KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB
+|----------------------------------------------------------------------------------|
+| +-- users = 167 MB                                                               |
+|                                                                                  |
+| +-- user6667 = 50KB                                                              |
+| +-- user6668 = 50KB                                                              |
+| +-- user...                                                                      |
+| +-- user10000 = 50KB |= 50KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB |KB
 +-- index.html = 5 KB
 ```
 
@@ -132,7 +132,7 @@ Hub3 = 167 MB
 
     "ignore": "merged-.*",
 
-...somewhere to `content.json` of main site. To virtually fill it with merger site content, we request `Merger:PostHere` permission:
+添加到主站点的 `content.json`，还需要请求`Merger:PostHere`的许可:
 
     +-------------------------------------------------------------------------+
     |                          wrapperPermissionAdd                           |
@@ -176,17 +176,17 @@ ZeroNet doesn't provide us a way to read and write other site's content, so Merg
     +-- 1RedXn7jxM23y4WsR7ByWzhjFaCcBJwVQ
         |
         +-- js
-|----------------------------------------------------------------------|
-| +-- ZeroFrame.js |roFrame.js |js |js |js |js |js |js |js |js |js |js |js
+|----------------------------------------------------------------------------------|
+| +-- ZeroFrame.js |roFrame.js |js |js |js |js |js |js |js |js |js |js |js |js |js |js
         +-- data
-|--------------------------------------------------------------------------|
-| +-- users                                                                |
-|                                                                          |
-| +-- user1                                                                |
-| |                                                                        |
-| |   +-- data.json                                                        |
-| |   +-- content.json                                                     |
-| +-- content.json     |ntent.json |on |on |on |on |on |on |on |on |on |on |on
+|--------------------------------------------------------------------------------------|
+| +-- users                                                                            |
+|                                                                                      |
+| +-- user1                                                                            |
+| |                                                                                    |
+| |   +-- data.json                                                                    |
+| |   +-- content.json                                                                 |
+| +-- content.json     |ntent.json |on |on |on |on |on |on |on |on |on |on |on |on |on |on
         +-- index.html
 
 We have set `db_path` to `merged-PostHere/merger.db` because ZeroNet can gather data only from files which are in database directory, which is in this case `merged-PostHere`.

@@ -1,0 +1,30 @@
+site_name: 零网事实
+theme:
+    name: "material"
+    language: "zh"
+plugins:
+  - search:
+        lang: ["jp"]
+extra:
+    search:
+        language: "jp"
+
+markdown_extensions:
+    - footnotes
+    - toc
+nav:
+    - 前言: index.md
+    - 安全: security.md
+    - 站点克隆: cloning-zites.md
+    - 静态站点: creating-static-zite.md
+    - 站点框架: zeroframe.md
+    - 数据库: databases.md
+    - 操作数据库: changing-tables.md
+    - 数据库模式: dbschema.md
+    - 用户数据: user-content.md
+    - 编辑用户数据: editing-user-data.md
+    - 聚合站: merger-sites.md
+    - 聚合后的数据: merged-content.md
+    - 补充: ugly-things.md
+    - 高阶教程:
+      - "extra/StaticZite.md"
