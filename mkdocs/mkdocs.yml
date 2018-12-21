@@ -12,6 +12,9 @@ extra:
 markdown_extensions:
     - footnotes
     - toc
+    - codehilite
+    - pymdownx.critic
+    - admonition
 nav:
     - 前言: index.md
     - 安全: security.md
@@ -24,7 +27,11 @@ nav:
     - 用户数据: user-content.md
     - 编辑用户数据: editing-user-data.md
     - 聚合站: merger-sites.md
-    - 聚合后的数据: merged-content.md
+    - 聚合后的数据: mergxed-sites.md
     - 补充: ugly-things.md
     - 高阶教程:
-      - "extra/StaticZite.md"
+      - 基础: "extra/TheBasics.md"
+      - 静态站点: "extra/StaticZite.md"
+      - 一些技巧: "extra/TipsAndTricks.md"
+      - 用户和数据库: "extra/UsersAndDatabasesInZeroNet.md"
+      - 写个插件: "extra/WriteAPlugin.md" 

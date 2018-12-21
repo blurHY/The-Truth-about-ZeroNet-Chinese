@@ -1,102 +1,106 @@
 ## 编辑聚合站点
 
-In the previous part, we made a merger site and a merged site (hub) for our new zite, _PostHere_.
+前面一章，我们建了一个聚合者站点和被聚合站（hub），用于搭建 PostHere。
 
 ## 创建用户数据的目录
 
-First of all we have to create `data/users/content.json` in our hub. Nothing new here.
+在被聚合站点（hub）中创建文件 `data/users/content.json` 
 
-    {
-        "ignore": ".*",
-        "user_contents": {
-            "cert_signers": {
-                "zeroid.bit": ["1iD5ZQJMNXu43w1qLB8sfdHVKppVMduGz"]
-            },
-            "permission_rules": {
-                ".*": {
-                    "files_allowed": "data.json",
-                    "max_size": 50000
-                }
-            },
-            "permissions": {}
-        }
+```json
+{
+    "ignore": ".*",
+    "user_contents": {
+        "cert_signers": {
+            "zeroid.bit": ["1iD5ZQJMNXu43w1qLB8sfdHVKppVMduGz"]
+        },
+        "permission_rules": {
+            ".*": {
+                "files_allowed": "data.json",
+                "max_size": 50000
+            }
+        },
+        "permissions": {}
     }
+}
+```
 
--   `ignore` - don't add users to `files` property.
--   `user_contents` - user-signed content.
--   `user_contents.cert_signers` - allowed _Certificate Authorities_.
--   `user_contents.permission_rules` - multiuser permissions.
--   `user_contents.permissions` - single user permissions.
+-   `ignore` - 不把用户添加到 `files` 属性.。
+-   `user_contents` - 由用户签名的数据。
+-   `user_contents.cert_signers` - 允许的证书颁发者。
+-   `user_contents.permission_rules` - 对符合某种条件的用户的规则。
+-   `user_contents.permissions` - 针对单个用户的规则。
 
-...And include it to root `content.json`:
+复制完后把这个文件引入至 `content.json`:
 
-    ...
-    "ignore": "data/users/.*",
-    "includes": {
-        "data/users/content.json": {
-            "signers": [],
-            "signers_required": 1
-        }
-    },
-    ...
+```json
+"ignore": "data/users/.*",
+"includes": {
+    "data/users/content.json": {
+        "signers": [],
+        "signers_required": 1
+    }
+},
+```
 
-Sign `content.json` and then `data/users/content.json`.
+{==签名 content.json 和 data/users/content.json==}
 
 ## 数据库模式
 
-As usual, we will use SQLite. Add this `dbschema.json` to main site:
+我们使用 SQLite，把下面这段复制到主站点的 `dbschema.json` 
 
-    {
-        "db_name": "merger",
-        "db_file": "merged-PostHere/merger.db",
-        "version": 3,
-        "maps": {
-            ".+/data/users/.+/content.json": {
-                "to_json_table": ["cert_user_id"]
-            },
-            ".+/data/users/.+/data.json": {
-                "to_table": [
-                    {
-                        "node": "posts",
-                        "table": "posts"
-                    }
-                ]
-            }
+```json
+{
+    "db_name": "merger",
+    "db_file": "merged-PostHere/merger.db",
+    "version": 3,
+    "maps": {
+        ".+/data/users/.+/content.json": {
+            "to_json_table": ["cert_user_id"]
         },
-        "tables": {
-            "json": {
-                "cols": [
-                    ["json_id", "INTEGER PRIMARY KEY AUTOINCREMENT"],
-                    ["site", "TEXT"],
-                    ["directory", "TEXT"],
-                    ["file_name", "TEXT"],
-                    ["cert_user_id", "TEXT"]
-                ],
-                "indexes": ["CREATE UNIQUE INDEX path ON json(directory, site, file_name)"],
-                "schema_changed": 2
-            },
-            "posts": {
-                "cols": [
-                    ["id", "integer"],
-                    ["title", "text"],
-                    ["content", "text"],
-                    ["date_added", "integer"],
-                    ["json_id", "integer references json(json_id)"]
-                ],
-                "indexes": [
-                    "CREATE UNIQUE INDEX post_id ON posts(id)"
-                ],
-                "schema_changed": 2
-            }
+        ".+/data/users/.+/data.json": {
+            "to_table": [
+                {
+                    "node": "posts",
+                    "table": "posts"
+                }
+            ]
+        }
+    },
+    "tables": {
+        "json": {
+            "cols": [
+                ["json_id", "INTEGER PRIMARY KEY AUTOINCREMENT"],
+                ["site", "TEXT"],
+                ["directory", "TEXT"],
+                ["file_name", "TEXT"],
+                ["cert_user_id", "TEXT"]
+            ],
+            "indexes": ["CREATE UNIQUE INDEX path ON json(directory, site, file_name)"],
+            "schema_changed": 2
+        },
+        "posts": {
+            "cols": [
+                ["id", "integer"],
+                ["title", "text"],
+                ["content", "text"],
+                ["date_added", "integer"],
+                ["json_id", "integer references json(json_id)"]
+            ],
+            "indexes": [
+                "CREATE UNIQUE INDEX post_id ON posts(id)"
+            ],
+            "schema_changed": 2
         }
     }
+}
+```
 
--   Have a look at `version: 3`. This means: `json` table will now have `site` column, too. For merger sites, `site` is hub address. We also use `merged-PostHere` directory for database. This will be described later.
--   Look at `.+/data/users/.+/content.json` object. It has `to_json_table` array with `["cert_user_id"]`. `json` table also has `cert_user_id` column. `to_json_table` means: "take `cert_user_id` property from file and use it for `cert_user_id` column of `json` table for this json". `cert_user_id` is username.
+-   `version: 3` 意为 `json` 表也有 `site` 字段。对于聚合者站点， `site` 就是被聚合站点的地址，`merged-PostHere` 也可以用。
+-   `.+/data/users/.+/content.json` 对象中的 `to_json_table` ： `json` 也有 `cert_user_id` 字段。 `to_json_table` 意为： “使用当前文件的 `cert_user_id` 属性作为 `json` 表中的当前文件对应的一行的`cert_user_id`字段的值”. `cert_user_id` 就是用户名。
 
 ### 获取用户名
 
-So, sample content is:
+示例：
 
     +-------------------------------------------------------------------------+
     |                                  json                                   |
@@ -115,20 +119,24 @@ So, sample content is:
     | 1       | Hello world | My first post in this... | 1234567890 | 1       |
     +---------+-------------+--------------------------+------------+---------+
 
-Everything is OK until you want to get post author. For each post, you have to take `json_id`, then get `directory` column of this `json_id` in `json` table, then find a row in `json` table which has `directory` = `directory` of old `json_id` and `file_name` = `content.json` and then get `cert_user_id`. So, simplest DB query is:
+为了获得文章作者名，对于每篇文章，都要先获取相应的`json_id`，再于`json`表按此id中取得`directory`字段，然后再在`json`表中找一条同一`directory`且`file_name` = `content.json`的数据，最终取得`cert_user_id`。
 
-    SELECT posts.*, json2.cert_user_id as username FROM posts, json, json AS json2 WHERE json.directory = json2.directory AND json2.file_name = "content.json" AND posts.json_id = json.json_id
+数据库查询语句：
 
-Hopefully, ZeroNet has another option for this.
+```sql
+SELECT posts.*, json2.cert_user_id as username FROM posts, json, json AS json2 WHERE json.directory = json2.directory AND json2.file_name = "content.json" AND posts.json_id = json.json_id
+```
 
-    ...
+当然还有另一种方法：
+
+```json
     ".+/data/users/.+/content.json": {
         "to_json_table": ["cert_user_id"],
         "file_name": "data.json"
     },
-    ...
+```
 
-`file_name` works like `JOIN`. For each user's `content.json`, ZeroNet find a row with same `site` and `directory` properties and with `file_name` = `data.json` and adds `cert_user_id` to this row. So, now structure is:
+`file_name` 相当于 `JOIN`。对于每个用户的 `content.json`, 零网会找一条 `site` 和 `directory` 属性相同且 `file_name` = `data.json` 的数据，并把`cert_user_id` 添加到这行数据。结构就变成了：
 
     +-------------------------------------------------------------------------+
     |                                  json                                   |
@@ -145,15 +153,17 @@ Hopefully, ZeroNet has another option for this.
     | 1       | Hello world | My first post in this... | 1234567890 | 1       |
     +---------+-------------+--------------------------+------------+---------+
 
-...and we can simplify our query:
+可以简化查询语句了：
 
-    SELECT posts.*, json.cert_user_id AS username FROM posts, json WHERE posts.json_id = json.json_id
+```sql
+SELECT posts.*, json.cert_user_id AS username FROM posts, json WHERE posts.json_id = json.json_id
+```
 
-So, now you can use your memory or previous sections to write the rest of the code. As you remember, ZeroNet uses virtual directories, for merger sites, so there is nothing new here expect file we change: `merged-PostHere/{hub}/data/users/{address}/data.json`.
+别忘了，零网在聚合者站点中使用虚拟目录，所以可以这样改文件 `merged-PostHere/{hub}/data/users/{address}/data.json`.
 
-## Adding and removing hubs
+## 增删子站
 
-We can show users a list of hubs they doesn't have with `mergerSiteList` command.
+用API `mergerSiteList` 列出已聚合的子站。
 
     +-------------------------------------------------------------------------+
     |                             mergerSiteList                              |
@@ -168,9 +178,9 @@ We can show users a list of hubs they doesn't have with `mergerSiteList` command
     | Return: List of merger sites as object                                  |
     +-------------------------------------------------------------------------+
 
-Try to execute `zeroFrame.cmd("mergerSiteList", [false], console.log.bind(console));` You'll see `Object { 1RedXn7jxM23y4WsR7ByWzhjFaCcBJwVQ: "PostHere" }` or something like that in the console.
+试着运行 `zeroFrame.cmd("mergerSiteList", [false], console.log.bind(console));`，可以在控制台看到 `Object { 1RedXn7jxM23y4WsR7ByWzhjFaCcBJwVQ: "PostHere" }` 。
 
-These commands are also often used by merger sites:
+以及其他常用命令:
 
     +-------------------------------------------------------------------------+
     |                              mergerSiteAdd                              |
@@ -199,4 +209,4 @@ These commands are also often used by merger sites:
 
 ## 例子
 
-As usually, you can watch finished site [here](downloads/posthere.html) and hub [here](downloads/postherehub.html).
+已完成的站点： [这](downloads/posthere.html) 和 [这](downloads/postherehub.html).

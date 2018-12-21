@@ -1,17 +1,16 @@
-## Introduction
+## 前言
 
-In ZeroNet, plugins can be created to extend the functionality of the client as well as provide api calls to sites. Some of the features that we use are actually plugins that can be downloaded, like `MergerSite` and `Newsfeed`. There currently isn't a plugin store where you can install them. However, it is simple to add, disable, or create plugins. In this tutorial, you will learn how to write a simple plugin that provides an api which can be called directly from a site.
+零网可以用插件扩展功能、提供额外的站点API，实际上有些功能就是一个插件实现的，比如`MergerSite` 和 `Newsfeed`。但是零网现在还是没有插件商店，需要手动安装插件才行。不过添加、禁用、创建插件还是挺简单的。
 
-> **Note**: I advise you to read [The Basics](/14pM9huTYzJdyQyHRj6v2kfhMe8DrxwpGt/?/tutorials/the_basics) tutorial first. You should also know to create a site.
+在本教程中，你将学到如何写一个零网插件，给站点提供额外的API。
 
+## 零网插件
 
-## ZeroNet Plugins
+零网客户端下有个`plugins`目录。如果你用的是ZeroBundle，该目录应位于`core`文件夹。
 
-In your ZeroNet folder will find a `plugins` folder. If you have installed ZeroNet through ZeroBundle, you might find it under the `core` folder.
+结构类似于：
 
-You should see a bunch of folders like the following:
-
-```
+``` json
 .
 ├── AnnounceZero
 ├── Cors
@@ -37,37 +36,36 @@ You should see a bunch of folders like the following:
 
 ```
 
-Notice that some folders have the prefix `disabled-`. This means that those plugins are not active. You can activate them by renaming the folder so that the prefix is removed. Once ZeroNet restarts, those plugins will load with the rest of them.
+有一些目录带有 `disabled-` 前缀，意为该插件非活跃，可以移除前缀以启用插件，再重启客户端，就能使用这些插件了。
 
-This means that if you want to add a new plugin, you just need to copy it into a new folder inside this `plugins` folder.
+这意味着若要添加新插件，直接把插件目录复制到 `plugins` 文件夹中即可。
 
 ## Hello World ZeroNet Plugin
 
-In order to start creating our new ZeroNet Plugin, we will need to create a new folder with the name of our plugin: `HelloWorld`.
+为了创建新插件，需要创建新文件夹，名为`HelloWorld`。
 
 ```bash
 $ mkdir HelloWorld
 $ cd HelloWorld
 ```
 
-Now, we need to create two seperate python files: `__init__.py` and `HelloWorldPlugin.py`.
+再分别创建两个文件： `__init__.py` 和 `HelloWorldPlugin.py`.
 
 ```bash
 $ touch __init__.py HelloWorldPlugin.py
 ```
 
-In `__init__.py`, we simply need to import our plugin.
+在 `__init__.py` 中 import 插件。
 
 ```python
 import HelloWorldPlugin
 ```
 
-Now we are getting to the interesting part...
+好玩的来了。。
 
+创建一个API，然后站点ZeroFrame调用命令`helloworld`，插件就会返回json数据`Hello World !`。
 
-Lets create a new zeroframe api call that will allow us to comunicate with a site using the command `helloWorld` which will return a json message that says `Hello World !`.
-
-To do this, we need to create a `UiWebsocketPlugin` class in our `HelloWorldPlugin.py` file.
+为了实现这点，要在 `HelloWorldPlugin.py` 文件中创建 `UiWebsocketPlugin` 类。
 
 ```python
 from Plugin import PluginManager
@@ -77,9 +75,9 @@ class UiWebsocketPlugin(object):
 
 ```
 
-Notice the `PluginManager.registerTo("UiWebsocket")` decorator. It registers and loads our plugin into ZeroNet and extends our class as a `UiWebsocket`.
+`PluginManager.registerTo("UiWebsocket")` 装饰器用于注册插件，会让零网装载这个插件，并扩展了 `UiWebsocket`。
 
-Next, we need to create an _action_ to communicate our message via websocket. Let's define it in our class `UiWebsocketPlugin`...
+下一步，创建一个**action**，用于websocket通信。在`UiWebsocketPlugin`添加这个函数：
 
 ```python
 from Plugin import PluginManager
@@ -92,48 +90,38 @@ class UiWebsocketPlugin(object):
         self.response(to, {'message':'Hello World'})
 ```
 
-We have added an `actionHelloWorld` method to our class. Notice here that the `action` prefix is mandatory in order to be called through the zeroframe api.
+!!! warning
+    `action`前缀是强制性的。
 
-We have two important elements that we are using here:
-1. **to**: represents the site that called our command.
-2. **response(to, json)**: the method that returns the response to the site through websocket using json format.
+有两个重要参数：
 
-We have finished our plugin. Now, let's test it!
+1. **to**：即调用该API的站点
+2. **response(to, json)**：通过websocket以json格式响应站点。
 
-> **Note** : Here, I am only showing how to create a UIWebsocket plugin, but there are other classes that accept plugins. These include:
-- UiRequest
-- User
-- UserManager
-- WorkerManager
-- TorManager
-- Site
-- SiteManager
-- FileRequest
-- ContentDb
-- ConfigPlugin
-- Actions
-- SiteStorage
-- UIWebsocket
+插件做好了，试一下。
 
-## Hello World site
+!!! note
+    还有其他接受插件的类，包括：
 
-In order to test out our new plugin, we need to create a site. This site is going to be fairly simple. You can find out how to create a simple site by following the other tutorials on the Dev Center, as well as on [ZeroBlog](/Blog.ZeroNetwork.bit/?Post:99:ZeroChat+tutorial+new).
+    - UiRequest
+    - User
+    - UserManager
+    - WorkerManager
+    - TorManager
+    - Site
+    - SiteManager
+    - FileRequest
+    - ContentDb
+    - ConfigPlugin
+    - Actions
+    - SiteStorage
+    - UIWebsocket
 
-![Create New site](./img/create-new-site.png "Create New Site")
+## Hello World 站点
 
-Click on `create new site` on the ZeroHello page. Once you have done that, open directory where your site files are stored. You should have these files in your site folder:
+为了测试插件，接下来创建一个简单的网站。
 
-```
-.
-├── content.json
-├── index.html
-└── js
-    └── ZeroFrame.js
-
-1 directory, 3 files
-```
-
-Open the `index.html` file. You should have the following lines of code:
+打开`index.html`：
 
 ```javascript
 class Page extends ZeroFrame {
@@ -162,7 +150,7 @@ class Page extends ZeroFrame {
 page = new Page()
 ```
 
-Let's add a new method to our `Page` class that will print our message to the page. We will call it `setHelloWorld`.
+添加新函数到 `Page` 用于输出信息：
 
 ```javascript
 setHelloWorld(message) {
@@ -171,7 +159,7 @@ setHelloWorld(message) {
 }
 ```
 
-We are then going to modify the `onOpenWebsocket` method so that instead of calling the `"siteInfo"` api, we will call our `"helloWorld"` api.
+修改 `onOpenWebsocket` 函数，不调用 `"siteInfo"` api，换成刚创建的的 `"helloWorld"` api.
 
 ```javascript
 onOpenWebsocket() {
@@ -182,11 +170,10 @@ onOpenWebsocket() {
 }
 ```
 
-Now all we have to do is pass the message from the response into our `setHelloWorld` method so that it can modify the html dom and show our message.
+!!! note
+    插件内`action`函数的名称后面一段决定了api名，即移除`action`前缀，并小写第一个字母。
 
-> **Note**: The name of our action method in our plugin will give us the name of our api. It should be noted that we have removed the `action` prefix and the capital letter on the first word.
-
-Final code:
+最终代码：
 
 ```javascript
 class Page extends ZeroFrame {
@@ -223,4 +210,4 @@ class Page extends ZeroFrame {
 page = new Page()
 ```
 
-There are many distributed applications which we could plug into Zeronet. This is why ZeroNet is such a great application. There are already some plugins, and now you can start to write your own also.
+很多分布式应用程序能作为零网插件运行，才成就了零网。零网自带一些插件，现在你可以自己写一个了。

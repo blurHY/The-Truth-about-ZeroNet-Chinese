@@ -206,4 +206,4 @@ div {
 
 ## .bit 地址
 
-如果你想要个域名像 `ivanq.bit`, 用 _Namecoin_，这个不将，教程自己找。
+如果你想要个域名像 `ivanq.bit`, 用 _Namecoin_，这个不讲，教程自己找。

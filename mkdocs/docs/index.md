@@ -2,105 +2,74 @@
 
 本文改编自 [The-truth-about-zeronet](https://github.com/imachug/The-Truth-about-ZeroNet)。
 
-## 站点 - Zite
+!!! tip
+    官方文档（已被墙）：<https://zeronet.io/docs/zh/>
 
-零网站点，又称 zite，正如其名，站点在分布式网络上分发。
+    还有在零网上的镜像（官方的）：<http://127.0.0.1:43110/1DocsYf2tZVVMEMJFHiDsppmFicZCWkVv1/zh/>
 
-### “互联网”和零网的不同
+## 站点
 
-#### 互联网
+零网站点，又称 zite[^1]，正如其名，站点在分布式网络上分发。
 
-互联网的模式：
+### 抗墙能力
 
-     ________       +--------+   |                |
-    |        |      | iPhone |   |                |
-    |  iPad  |      +--------+   |                |      ______________
-    |________|-----------+       |                |     |              |
-                         |       |    ________    |  +--|    Google    |
-       _________         |       |   |  /..\  |   |  |  |______________|
-      | Windows |--------+-------|---|  \__/  |---|--+   ______________
-      |_________|                |   |___||___|   |  |  |              |
-      |_|_|_|_|_|                |                |  +--|    网络       |
-      |_|_|_|_|_|                |                |     |______________|
-                                 |                |
-           *设备*                |   *提供商*      |         *站点*
+#### 常规互联网
 
-如果宽带服务商发送故障或者网站被屏蔽：
+![](internet.png)
 
-     ________       +--------+   |                |
-    |        |      | iPhone |   |                |
-    |  iPad  |      +--------+   |                |      ______________
-    |________|-----------+       |                |     |              |
-                         |       |    ________    |     |    Google    |
-       _________         |       |   |\/\/\/\/|   |     |______________|
-      | Windows |--------+-------|---|/\ No /\|   |      ______________
-      |_________|                |   |\/\/\/\/|   |     |              |
-      |_|_|_|_|_|                |                |     |   Facebook   |
-      |_|_|_|_|_|                |                |     |______________|
-                                 |                |
-           *设备*                |   *提供商*      |         *站点*
+网站容易被墙。
 
-就没法无法访问服务器
+#### 零网
 
-#### ZeroNet
+![](zeronet.png)
 
-这是零网
-
-     ________       +--------+
-    |        |      | iPhone |
-    |  iPad  |      +--------+
-    |________|-----------+
-         |               |
-       __|______         |
-      | Windows |--------+
-      |_________|
-      |_|_|_|_|_|
-      |_|_|_|_|_|
-
-      *设备 = 站点*
-
-如果 _iPhone_ 故障或者被屏蔽：
-
-     ________       +--------+
-    |        |      |\/ No \/|
-    |  iPad  |      +--------+
-    |________|
-         |
-       __|______
-      | Windows |
-      |_________|
-      |_|_|_|_|_|
-      |_|_|_|_|_|
-
-      *设备 = 站点*
-
-其他人仍能访问站点
+网站在每个访问者的设备上都有，难以屏蔽。
 
 ## 安装
 
-要在 Windows，Mac 和 Linux 上使用零网，先得安装。访问 `https://zeronet.io` 并下载安装。
+要在 Windows，Mac 和 Linux 上使用零网，先得安装客户端。
+
+{--访问 `https://zeronet.io` 并下载安装。--}
+
+{++在大陆地区，可以在github上下载，<https://github.com/HelloZeroNet/ZeroNet-win/tree/dist>++}
 
 ## 访问站点
 
-零网在本地架设服务器于 _http://127.0.0.1:43110_ 。启动零网会自动打开浏览器。
+零网在本地架设服务器于 {==<http://127.0.0.1:43110>==} 。启动零网会自动打开浏览器。
 
 你可以在左侧列表看到已下载的网站和一些链接，现在就打开看看吧。
 
-我为什么说是 _下载_ ，这跟零网的原理有关，待会再解释。
+至于为何说是 **下载** ，这跟零网的原理有关，待会再解释。
 
 
 ## 注册 ZeroID
 
-用户可以在 _互联网_ 上如 Google, eBay，等网站上注册。零网上注册账号，技术上是不可行的，相应的，零网引入了 _证书授权 Certificate Authorities_。 例如, [ZeroID](http://127.0.0.1:43110/1iD5ZQJMNXu43w1qLB8sfdHVKppVMduGz/)，是使用得最广泛的证书授权站点，就先在这注册吧。
+用户可以在互联网[^2] 上如 Google, eBay，等网站上注册账号。而零网上注册账号，技术上是不可行的，相应的，零网引入了 **证书授权站**[^3]。 例如，[ZeroID](http://127.0.0.1:43110/1iD5ZQJMNXu43w1qLB8sfdHVKppVMduGz/)，是使用得最广泛的证书授权站点，就先在这注册吧。
 
-访问 [ZeroID](http://127.0.0.1:43110/1iD5ZQJMNXu43w1qLB8sfdHVKppVMduGz/) 并注册 (_注意: 如果你不想泄露 IP，可以用 TOR。_)
+访问 [ZeroID](http://127.0.0.1:43110/1iD5ZQJMNXu43w1qLB8sfdHVKppVMduGz/) 并注册 
 
-输入了昵称，密码呢？自动生成。零网根目录下有个 `users.json` 文件，注册的新账号会放在里面 : 私钥和公钥，还有昵称。不要泄露私钥给别人 - 私钥是密码。公钥就是账号。 如果 `users.json` 丢失或者被篡改，就没法访问你的账号了。所以要经常备份。
+!!! warning 
+    如果要匿名，即隐藏IP，可以使用Tor
+
+输入了昵称，密码呢？答案是——自动生成。零网根目录下有个 `users.json` 文件，注册的新账号会放在里面 : 私钥和公钥，还有昵称。不要泄露私钥给别人 - 私钥是密码。公钥就是账号。 如果 `users.json` 丢失或者被篡改，就没法访问你的账号了。所以要经常备份。
 
 ## 获取 ZeroTalk 账号
 
-现在看下能用 _ZeroID_ 的站点，论坛 _ZeroTalk_ 是个很好的选择，
+现在看下能用 ZeroID 的站点，论坛 ZeroTalk 是个很好的选择，
 
-访问 [ZeroTalk](http://127.0.0.1:43110/1TaLkFrMwvbNsooF4ioKAY9EuxTBTjipT/)，点击 _Test messages_ 帖子, 再点 _登陆为..._ 选择 _{你的用户名}@zeroid.bit_。输入一些 `Hello, world!` 之类的文本再点击提交。 不想发 `Hello, world!` 的话，也可以发一下本教程 :)
+访问 [ZeroTalk](http://127.0.0.1:43110/1TaLkFrMwvbNsooF4ioKAY9EuxTBTjipT/)，点击 Test messages 帖子， 再点 **登陆为...** 选择 `{你的用户名}@zeroid.bit`。输入一些 `Hello, world!` 之类的文本再点击提交。 不想发 `Hello, world!` 的话，也可以发一下本教程 :)
 
-注意页面顶部的 `Forums: English · Dansk · Español · Français ...` 选择你的语言。如果你是中国人，最好去专用论坛 [New GFW Talk](http://127.0.0.1:43110/19BPUZYAdCMxExKHoVSG3cG95wfUfFTEC9/) 。
+可以点击顶部 `Forums: English · Dansk · Español · Français ...` 菜单栏选择相应论坛。中文论坛 [New GFW Talk](http://127.0.0.1:43110/19BPUZYAdCMxExKHoVSG3cG95wfUfFTEC9/) 。
+
+
+## 关于作者
+
+原作者：[imachug](https://github.com/imachug)、[krixano](https://github.com/krixano)
+
+译者：[blurHY](https://github.com/blurhy)
+
+具体的要看github repo。
+
+[^1]:**Z**eroNet S**ite**
+[^2]:指常规的、中心化的互联网。
+[^3]:Certificate Authorities
